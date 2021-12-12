@@ -1,0 +1,18 @@
+import networkx as nx
+import numpy as np
+
+# remove a set of edges
+def remove_edges(G,edge_set):
+    nG = G.copy()
+    nG.remove_edges_from(edge_set)
+    return nG
+
+# return a new graph with interventions
+def intervention(G, proxies):
+    edge_set = []
+    for p in proxies:
+        edge_set += list(G.in_edges(p))
+    nG = remove_edges(G,edge_set)
+    return nG
+
+

@@ -126,9 +126,17 @@ if __name__ == '__main__':
     print("cnf expr: ", cnf_expr)
     cnf2 = convert_cnf_to_list(cnf_expr, var_to_symbol)
     print("cnf2: ", cnf2)
+
+    mdnf = [[1,2], [-3], [-5,-4,3], [5,6,4]]
+    mdnf_expr, mvar_to_symbol = make_expression(mdnf)
+    print("mdnf ", mdnf)
+    print("mdnf expr: ", mdnf_expr)
+    mcnf_expr = to_cnf(mdnf_expr, simplify=True)
+    print("mcnf expr: ", mcnf_expr)
+    mcnf2 = convert_cnf_to_list(mcnf_expr, mvar_to_symbol)
+    print("mcnf2: ", mcnf2)
     
-
-
+    
 
 
     

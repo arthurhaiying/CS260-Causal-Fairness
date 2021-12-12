@@ -1,0 +1,33 @@
+* main.py
+  - script that triggers mincut, training, etc.
+
+* /data/
+  - edge_weight.txt
+      file that stores edges as well as the weight assigned for each edges
+       par, child, weight     form
+  - insurance.csv
+       data file that contains 5,000 data examples
+  - vdic.npy
+       numpy dictionary that stores states for each variable
+  (The following files are not used)
+  - insurance.bif
+       a .bif file that include the BN structure and true CPTs
+  - insurance.net
+       a .net file that include the BN structure and true CPTs
+  - insurance.dat
+       certain format of data in .dat format that may be used for SAMIAM
+       
+* model/bn.py   uses bnlearn library for model constrution, inference, learning
+  - include functions that load csv dataset, build BN from a .bif file,
+    build a BN from a list of edges, save and load a BN model.
+  - parameter learning MLE from data
+  - inference given evidences
+  - save CPTs into JSON, visualize BN structure, etc.
+
+* graph/mincut.py   finds a mincut
+  - finds a minimum cut on a G
+  - remove a list of edges from G
+  - run atomic intervention on a set of nodes in G
+
+* graph/utils.py    utils
+  - build a networkx DAG from /data/edge_weight.txt file

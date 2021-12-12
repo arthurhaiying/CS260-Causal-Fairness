@@ -44,7 +44,7 @@ class DAG:
 
 
 '''
-Find minimum cut that disconnect source nodes and a target node in dag using NetworkX library
+Find minimum cut using NetworkX library
 Arguments:
     dag: an DAG object with adjacency list
     sources: a list of proxy nodes
@@ -60,7 +60,7 @@ def minimum_cut(dag, sources, target):
     for s in sources:
         G.add_edge('dummy', s, capacity=INFINITY)
         # connect dummy source to every proxy node
-        # set infinite edge weight so that it cannot be cut through
+        # set infinite weight so that this edge cannot be cut through
     for node,edges in dag.adjacency.items():
         for edge in edges:
             G.add_edge(node, edge.v, capacity=edge.weight)

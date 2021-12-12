@@ -1,0 +1,38 @@
+import networkx as nx
+import numpy as np
+
+INFINITY = np.float32('inf')
+
+# G: networkx graph
+# sources: list of proxies
+# target: a target variable
+def minimum_cut(G, sources, target):
+    G = G.copy()
+    G.add_node('dummy') # add dummy source node
+    for s in sources:
+        G.add_edge('dummy', s, capacity=INFINITY)
+    cut_value, partition = nx.minimum_cut(G, 'dummy', target)
+    reachable, non_reachable = partition
+    # find mininum cut
+    cutset = []
+    # retrieve every outgoing edges from the reachable set
+    for node in reachable:
+        for c in G.successors(node):
+            if c not in reachable:
+                cutset.append((node,c))
+    return cut_value, cutset
+
+# remove a set of edges
+def remove_edges(G,edge_set):
+    nG = G.copy()
+    nG.remove_edges_from(edge_set)
+    return nG
+
+# return a new graph with interventions
+def intervention(G, proxies):
+    edge_set = []
+    for p in proxies:
+        edge_set += list(G.in_edges(p))
+    nG = remove_edges(G,edge_set)
+    return nG
+    

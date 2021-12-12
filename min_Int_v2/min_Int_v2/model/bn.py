@@ -1,0 +1,64 @@
+import bnlearn as bn
+import pandas as pd
+import numpy as np
+import json
+import networkx as nx
+
+###############################################
+###   functions that load and save model    ###
+###############################################
+def load_data(fdir):
+    return pd.read_csv(fdir)
+
+def load_bif(fdir,param=False):
+    return bn.import_DAG(fdir,CPD=param)
+
+def save_bn(model,fdir):
+    bn.save(model,filepath=fdir,overwrite=True)
+    
+def load_bn(fdir):
+    model = bn.load(filepath=fdir)
+    return model
+
+# list of tuples that represents edges
+def build_bn(edges):
+    model = bn.make_DAG(edges)
+    return model
+
+###############################################
+###   BN Learning and Inference             ###
+###############################################
+def parameter_learning(model,df):
+    learned_model = bn.parameter_learning.fit(model,df)
+    return learned_model
+
+# evidences in the form of {'evidence1' : value,...}
+# targets: [target1, target2, ...]
+def inference(model,evidences,targets):
+    print(f"==== Run Query evidences: {evidences}\n targets: {targets} ==")
+    query = bn.inference.fit(model,variables=targets,evidence=evidences)
+    return query
+
+###############################################
+###   Utilities                             ###
+###############################################
+def save_CPTs(model,fjson):
+    dict = {}
+    for cpt in model['model'].get_cpds():
+        cpt_value = cpt.get_values().tolist()
+        s = cpt.variable + '|' + (','.join([x for x in cpt.variables if x!=cpt.variable]))
+        dict[s] = cpt_value
+    with open(fjson, 'w') as fd:
+        json.dump(dict, fd)
+        
+def plot_BN(model):
+    bn.plot(model,interactive=True)
+
+def generate_nxG(model):
+    G = nx.DiGraph()
+    for cpt in model['model'].get_cpds():
+        child = cpt.variable
+        parents = [x for x in cpt.variables if x!=cpt.variable]
+        for p in parents:
+            G.add_edge(p,child)
+    return G

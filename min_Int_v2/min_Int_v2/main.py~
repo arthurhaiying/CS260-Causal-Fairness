@@ -1,0 +1,23 @@
+import networkx as nx
+import numpy as np
+import bnlearn as bn
+from model.bn import *
+from graph.mincut import *
+from graph.utils import *
+
+if __name__ == '__main__':
+    # construct a nx digraph from edge_weight
+    G = build_graph('./data/edge_weight.txt')
+    
+    # find a mincut
+    G1 = intervention(G,['Age','SocioEcon'])
+    cut_value,cut_set = minimum_cut(G1, sources=['Age', 'SocioEcon'], target='PropCost')
+    G2 = remove_edges(G1,cut_set)
+    
+    # build a bn model
+    model = build_bn(list(G2.edges))
+    # parameter learning on model
+    df = load_data('./data/insurance.csv')
+    learned_model = parameter_learning(model,df)
+    
+    
